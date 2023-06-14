@@ -8,8 +8,12 @@ from utils import fs_utils
 GROBID_URL = 'https://kermitt2-grobid.hf.space/api/processFulltextDocument'
 
 
-def extract_text_from_pdf(cleaned_pdf_path: str, debug: bool = False) -> None:
+def extract_text_from_pdf(cleaned_pdf_path: str, force: bool = False, debug: bool = False) -> None:
     folder_path = os.path.dirname(cleaned_pdf_path)
+
+    # Skip if already extracted
+    if not force and len(os.listdir(folder_path)) > 2:
+        return
 
     # Delete old files
     files_to_delete = fs_utils.filter_files_in_folder(folder_path, ['debug.xml', 'chapters.json', '.txt'])

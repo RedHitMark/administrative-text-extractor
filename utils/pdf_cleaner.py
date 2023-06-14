@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pdfplumber
 import pikepdf
@@ -19,9 +21,11 @@ def find_table_bbox_per_page(pdf_path: str) -> dict:
     return tables_bboxes_per_page
 
 
-def clean_pdf(original_pdf_path: str, cleaned_pdf_path: str) -> None:
-    tables_bboxes_per_page = find_table_bbox_per_page(original_pdf_path)
+def clean_pdf(original_pdf_path: str, cleaned_pdf_path: str, force: bool = False) -> None:
+    if not force and os.path.exists(cleaned_pdf_path):
+        return
 
+    tables_bboxes_per_page = find_table_bbox_per_page(original_pdf_path)
     with pikepdf.open(original_pdf_path, allow_overwriting_input=True) as pdf:
         height_per_page = {}
 
